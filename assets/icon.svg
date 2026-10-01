@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#6d5dfc"/><stop offset="1" stop-color="#18c8ff"/></linearGradient></defs>
+<rect width="512" height="512" rx="110" fill="url(#g)"/>
+<circle cx="256" cy="205" r="105" fill="#fff" opacity=".96"/>
+<path d="M120 420c22-91 86-132 136-132s114 41 136 132" fill="#fff" opacity=".96"/>
+<path d="M170 195c23-52 60-77 113-77 38 0 68 12 91 35-37-6-65 4-91 27-36-27-74-25-113 15z" fill="#222" opacity=".9"/>
+<text x="256" y="485" text-anchor="middle" font-family="Arial,sans-serif" font-size="34" font-weight="700" fill="#fff">LIFE</text>
+</svg>
