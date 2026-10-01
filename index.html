@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#111827">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/icon.svg">
+<title>My Life Simulator</title>
+<style>
+:root{--bg:#0b1020;--card:#151c31;--muted:#9aa6c1;--text:#f5f7ff;--accent:#6d5dfc;--good:#34d399;--bad:#fb7185}
+*{box-sizing:border-box}html,body{margin:0;background:linear-gradient(160deg,#0b1020,#18213b);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100%;touch-action:manipulation}
+body{padding-bottom:24px}.app{max-width:720px;margin:auto;padding:12px}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 4px}
+.brand{font-weight:900;font-size:20px}.sub{font-size:12px;color:var(--muted)}
+.card{background:rgba(21,28,49,.94);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:14px;box-shadow:0 12px 35px rgba(0,0,0,.22);margin-bottom:12px}
+.profile{display:flex;gap:14px;align-items:center}.avatar{width:82px;height:82px;border-radius:18px;object-fit:cover;border:2px solid rgba(255,255,255,.2)}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}.stat{background:#0e1528;border-radius:14px;padding:9px}.stat b{display:block;font-size:16px}.bar{height:7px;background:#27314b;border-radius:9px;overflow:hidden;margin-top:6px}.fill{height:100%;background:var(--accent);width:50%}
+.clock{font-size:28px;font-weight:900}.day{color:#b7c2dc}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.btn{border:0;border-radius:16px;padding:14px 10px;background:#222c49;color:#fff;font-weight:800;font-size:15px;min-height:58px}.btn:active{transform:scale(.98)}.primary{background:linear-gradient(135deg,#6d5dfc,#4f46e5)}.good{background:#134e3a}.warn{background:#5b3a11}.danger{background:#5b1f2c}
+.section-title{font-weight:900;margin-bottom:10px}.location{font-size:14px;color:#c8d1e7}
+.log{height:130px;overflow:auto;background:#0b1120;border-radius:14px;padding:10px;font-size:13px;line-height:1.55;color:#c9d4eb}
+.install{display:none}.install.show{display:block}.tiny{font-size:12px;color:var(--muted)}
+@media(min-width:620px){.grid{grid-template-columns:repeat(3,1fr)}.stats{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div><div class="brand">🎮 My Life Simulator</div><div class="sub">তোমার নিজের ছোট্ট ভার্চুয়াল জীবন</div></div><div class="clock" id="clock">07:00</div></header>
+
+<div class="card profile">
+<img class="avatar" src="assets/player.jpg" alt="Player">
+<div style="flex:1"><div style="font-size:18px;font-weight:900">My Character</div><div class="location" id="location">🏠 Home</div><div class="day" id="date">Day 1</div></div>
+</div>
+
+<div class="card">
+<div class="stats">
+<div class="stat">💰 টাকা <b id="money">৳1000</b></div>
+<div class="stat">🍗 ক্ষুধা <b id="hunger">80%</b><div class="bar"><div class="fill" id="hungerBar"></div></div></div>
+<div class="stat">⚡ এনার্জি <b id="energy">80%</b><div class="bar"><div class="fill" id="energyBar"></div></div></div>
+<div class="stat">❤️ সুখ <b id="happy">70%</b><div class="bar"><div class="fill" id="happyBar"></div></div></div>
+</div>
+<div style="margin-top:10px">💖 Relationship: <b id="love">20%</b> &nbsp; 👶 Children: <b id="kids">0</b></div>
+</div>
+
+<div class="card install" id="installCard">
+<div class="section-title">📲 ফোনে গেম হিসেবে ইনস্টল করো</div>
+<div class="tiny">Chrome-এর Install/Add to Home screen অপশন ব্যবহার করতে পারো।</div>
+<button class="btn primary" id="installBtn" style="width:100%;margin-top:9px">Install Game</button>
+</div>
+
+<div class="card">
+<div class="section-title">🏙️ কাজ ও জীবন</div>
+<div class="grid">
+<button class="btn primary" onclick="act('work')">💼 কাজ</button>
+<button class="btn" onclick="act('eat')">🍛 খাবার</button>
+<button class="btn" onclick="act('shop')">🛒 শপিং</button>
+<button class="btn" onclick="act('park')">🌳 পার্ক</button>
+<button class="btn" onclick="act('date')">💑 ডেট</button>
+<button class="btn good" onclick="act('rest')">🛏️ ঘুম/বিশ্রাম</button>
+</div>
+</div>
+
+<div class="card">
+<div class="section-title">❤️ Relationship & Family</div>
+<div class="grid">
+<button class="btn" onclick="act('talk')">💬 কথা বলো</button>
+<button class="btn" onclick="act('gift')">🎁 গিফট</button>
+<button class="btn" onclick="act('marry')">💍 বিয়ে</button>
+<button class="btn" onclick="act('baby')">👶 সন্তান</button>
+</div>
+</div>
+
+<div class="card">
+<div class="section-title">🕹️ Game Log</div>
+<div class="log" id="log"></div>
+</div>
+
+<div class="card">
+<div class="grid">
+<button class="btn" onclick="saveGame()">💾 Save</button>
+<button class="btn danger" onclick="resetGame()">♻️ New Life</button>
+</div>
+</div>
+</div>
+
+<script>
+const KEY='my-life-simulator-save-v1';
+let s=JSON.parse(localStorage.getItem(KEY)||'null')||{money:1000,hunger:80,energy:80,happy:70,love:20,kids:0,day:1,hour:7,minute:0,married:false,location:'🏠 Home',log:[]};
+let deferredPrompt=null;
+const $=id=>document.getElementById(id);
+function clamp(x){return Math.max(0,Math.min(100,x))}
+function tick(min=30){s.minute+=min;while(s.minute>=60){s.minute-=60;s.hour++;}if(s.hour>=24){s.hour-=24;s.day++;}s.hunger=clamp(s.hunger-2);s.energy=clamp(s.energy-2);if(s.hunger<20)s.happy=clamp(s.happy-2);saveGame(false);render()}
+function addLog(t){s.log.unshift('• '+t);s.log=s.log.slice(0,30)}
+function act(a){
+if(a==='work'){s.money+=350;s.energy=clamp(s.energy-18);s.hunger=clamp(s.hunger-8);s.location='💼 Office';addLog('কাজ করে ৳350 আয় করেছ।');tick(120)}
+if(a==='eat'){if(s.money<120){addLog('খাবার কেনার মতো টাকা নেই।')}else{s.money-=120;s.hunger=clamp(s.hunger+35);s.happy=clamp(s.happy+4);s.location='🍛 Restaurant';addLog('ভালো করে খাবার খেয়েছ।');tick(30)}}
+if(a==='shop'){if(s.money<250){addLog('শপিং করার জন্য আরও টাকা দরকার।')}else{s.money-=250;s.happy=clamp(s.happy+10);s.location='🛒 Shop';addLog('নতুন জিনিস কিনেছ।');tick(45)}}
+if(a==='park'){s.happy=clamp(s.happy+15);s.energy=clamp(s.energy-5);s.location='🌳 Park';addLog('পার্কে ঘুরে মন ভালো হয়েছে।');tick(45)}
+if(a==='date'){if(s.money<200){addLog('ডেটের জন্য ৳200 দরকার।')}else{s.money-=200;s.love=clamp(s.love+12);s.happy=clamp(s.happy+8);s.location='💑 Date';addLog('একসাথে সুন্দর সময় কাটিয়েছ।');tick(90)}}
+if(a==='rest'){s.energy=clamp(s.energy+45);s.hunger=clamp(s.hunger-5);s.location='🛏️ Home';addLog('বিশ্রাম নিয়ে এনার্জি ফিরে পেয়েছ।');tick(360)}
+if(a==='talk'){s.love=clamp(s.love+7);s.happy=clamp(s.happy+4);addLog('অনেকক্ষণ কথা বলেছ।');tick(20)}
+if(a==='gift'){if(s.money<300){addLog('গিফট কেনার জন্য ৳300 দরকার।')}else{s.money-=300;s.love=clamp(s.love+15);s.happy=clamp(s.happy+7);addLog('একটা সুন্দর গিফট দিয়েছ।');tick(30)}}
+if(a==='marry'){if(s.married){addLog('তোমার ইতিমধ্যে বিয়ে হয়েছে।')}else if(s.love<70){addLog('বিয়ের আগে relationship 70%+ করো।')}else{s.married=true;s.happy=clamp(s.happy+15);addLog('💍 বিয়ে হয়ে গেছে! নতুন জীবন শুরু।');tick(60)}}
+if(a==='baby'){if(!s.married){addLog('সন্তানের জন্য আগে বিয়ে করতে হবে।')}else{s.kids++;s.happy=clamp(s.happy+10);s.money-=100;s.energy=clamp(s.energy-10);addLog('👶 পরিবারে নতুন সদস্য এসেছে!');tick(120)}}
+render()
+}
+function render(){
+$('money').textContent='৳'+s.money;$('hunger').textContent=Math.round(s.hunger)+'%';$('energy').textContent=Math.round(s.energy)+'%';$('happy').textContent=Math.round(s.happy)+'%';$('love').textContent=Math.round(s.love)+'%';$('kids').textContent=s.kids;
+$('hungerBar').style.width=s.hunger+'%';$('energyBar').style.width=s.energy+'%';$('happyBar').style.width=s.happy+'%';
+$('clock').textContent=String(s.hour).padStart(2,'0')+':'+String(s.minute).padStart(2,'0');$('date').textContent='Day '+s.day+(s.married?' • 💍 Married':'');$('location').textContent=s.location;
+$('log').innerHTML=s.log.length?s.log.join('<br>'):'গেম শুরু হয়েছে—তোমার জীবন শুরু করো!'; 
+}
+function saveGame(show=true){localStorage.setItem(KEY,JSON.stringify(s));if(show){addLog('💾 গেম সেভ হয়েছে।');localStorage.setItem(KEY,JSON.stringify(s));render()}}
+function resetGame(){if(confirm('নতুন জীবন শুরু করবে? পুরোনো save মুছে যাবে।')){localStorage.removeItem(KEY);location.reload()}}
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;$('installCard').classList.add('show')});
+$('installBtn').onclick=async()=>{if(deferredPrompt){deferredPrompt.prompt();deferredPrompt=null}else{alert('Chrome menu (⋮) → Add to Home screen / Install app নির্বাচন করো।')}};
+if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js'));
+render();
+</script>
+</body></html>
